@@ -26,7 +26,7 @@
             </section>
             <section>
                 <button type="submit" class="button is-primary">Se connecter</button>
-                <button type ="reset" class="button is-danger">Réinitialiser</button>
+                <button type ="reset" class="button is-danger" @click="resetForm">Réinitialiser</button>
             </section>
         </form>
     </main>
@@ -51,13 +51,26 @@ const isUserInputValid = (input:string): boolean => {
     return pattern.test(input);
 }
 
+const isPasswordInputValid = (input:string): boolean => {
+    const pattern = new RegExp('^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#\$%\^&\*])(?=.{8,})');
+    return pattern.test(input);
+}
 
 const submitHandler = () => {
     if (!isUserInputValid(data.email)){
         alert('Email invalide');
         return;
     }
-    console.log ('Email valide');
+    if (!isPasswordInputValid(data.password)){
+        alert('Le MDP doit contenir au moins 8 caractères, une majuscule, une minuscule, un chiffre et un caractère spécial');
+        return;
+    }
+    console.log ('Email valide et mot de passe valide');
+}
+
+const resetForm = () => {
+    data.email = '';
+    data.password = '';
 }
 
 </script>
