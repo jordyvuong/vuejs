@@ -60,7 +60,4 @@ const submitHandler = () => {
     console.log ('Email valide');
 }
 
-const inputHandler = function (){
-}
-
 </script>
