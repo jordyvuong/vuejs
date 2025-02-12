@@ -6,7 +6,7 @@
                 <article>
                     <label for="email"></label>
                     <input
-                    v-model="data.email" 
+                    v-model="email" 
                     id="email"
                     placeholder="Enter your email"
                     type="email"
@@ -16,7 +16,7 @@
                 <article>
                     <label for="password"></label>
                     <input 
-                    v-model="data.password"
+                    v-model="password"
                     id="password"
                     placeholder="Entrez votre mot de passe"
                     type="password"
@@ -33,19 +33,31 @@
 </template>
 
 <script setup lang="ts">
-import { reactive, watch } from 'vue';
+import { reactive, watch, ref } from 'vue';
+import inputValidator from '../utils/input-validator';
+import { useRouter } from 'vue-router';
+
+const router = useRouter();
 
 
-const data = reactive({
+/*const data = reactive({
     email: '',
     password: ''
 });
+*/
 
-watch(data, (val) => {
-    console.log('Changement dans la variable data')
+const email = ref('');
+const password = ref('');
+
+watch(email, (val) => {
+    console.log(val, inputValidator(val, 'email'))
+});
+watch(password, (val) => {
+    console.log(val, inputValidator(val, 'password'))
 });
 
-const isUserInputValid = (input:string): boolean => {
+
+/*const isUserInputValid = (input:string): boolean => {
     
     const pattern = new RegExp('^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,6}$');
     return pattern.test(input);
@@ -55,22 +67,33 @@ const isPasswordInputValid = (input:string): boolean => {
     const pattern = new RegExp('^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#\$%\^&\*])(?=.{8,})');
     return pattern.test(input);
 }
+*/
 
-const submitHandler = () => {
-    if (!isUserInputValid(data.email)){
-        alert('Email invalide');
-        return;
-    }
-    if (!isPasswordInputValid(data.password)){
-        alert('Le MDP doit contenir au moins 8 caractères, une majuscule, une minuscule, un chiffre et un caractère spécial');
-        return;
-    }
-    console.log ('Email valide et mot de passe valide');
-}
+const submitHandler = async () => {
+    const result = await fetch('users.json')
+    const users = await result.json()
+    console.log(users)
 
+    const user = users.find((user:any) => user.email === email.value)
+    if(!user){
+        alert('User not found')
+        return  
+    }
+    if(!(user.password === password.value)){
+        alert('Password incorrect')
+        return
+    }
+
+console.log('User connected')
+router.push('/session/' + user.id)
+
+
+
+
+};
 const resetForm = () => {
-    data.email = '';
-    data.password = '';
+    email.value = '';
+    password.value = '';
 }
 
 </script>

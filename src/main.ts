@@ -6,6 +6,7 @@ import HomePage from './pages/HomePage.vue';
 import LoginPage from './pages/LoginPage.vue';
 import RegisterPage from './pages/RegisterPage.vue';
 import TestView from './pages/TestView.vue';
+import SessionPage from './pages/SessionPage.vue';
 
 
 const router = createRouter({
@@ -26,6 +27,10 @@ const router = createRouter({
         {
             path: '/test',
             component: TestView
+        },
+        {
+            path: '/session/:id',
+            component: SessionPage
         }
     ]
 })
